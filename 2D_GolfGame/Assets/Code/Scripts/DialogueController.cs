@@ -38,7 +38,7 @@ public class DialogueController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKeyDown("space") && !conversationEnded)
             AdvanceLine();
         else if (conversationEnded)
             EndConversation();

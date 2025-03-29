@@ -1,33 +1,32 @@
 using System.Collections;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.XR;
 
 public class SentryEnemy : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Transform bulletSpawnPoint;
-    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] public Transform bulletSpawnPoint;
+    [SerializeField] public GameObject bulletPrefab;
 
     [Header("Attributes")]
-    [SerializeField] private float bulletSpeed = 10f; // bullet speed
+    [SerializeField] private float bulletSpeed; // bullet speed
     [SerializeField] private float damage = 1f; // bullet damage
-    [SerializeField] private float time_between_fire = 100f;
-
-    
+    [SerializeField]  private float bulletTimer; //how many bullets can spawn at once
 
     private void FixedUpdate()
     {
-        if (time_between_fire == 0 && bulletPrefab != null)
+        if (bulletTimer == 0)
         {
-            FireBullet();
-            time_between_fire = 100f;
-        }
-        else { time_between_fire -= 1; }
+            FireBullet(); 
+        } else { bulletTimer -= 1; }
     }
 
     private void FireBullet()
     {
+        bulletTimer = 50f;
         var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        bullet.GetComponent<Rigidbody2D>().linearVelocity = bulletSpawnPoint.up * bulletSpeed;
+        bullet.GetComponent<Rigidbody2D>().linearVelocity = transform.up * bulletSpeed;
     }
 }

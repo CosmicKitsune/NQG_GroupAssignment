@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private float life_time = 10f;
+    [SerializeField] private float life_time;
 
     private void Awake()
     {
