@@ -80,6 +80,7 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (InputManager.instance.AttackInput) { Debug.Log("Attack button pressed!"); }
         PlayerInput();
 
         if(!isPlayerDragging && rb.linearVelocity.magnitude > 0.1f)
@@ -116,7 +117,7 @@ public class Ball : MonoBehaviour
     {
         if (timeUntilMelee <= 0f)
         {
-            if(Input.GetMouseButtonDown(1) && swordSwingCount == 0 && weaponList[0])
+            if(Input.GetMouseButtonDown(1) && swordSwingCount == 0 && weaponList[0]) //if (InputManager.instance.AttackInput && swordSwingCount == 0 && weaponList[0]) //
             {
                 Debug.Log($"Current weapon name: {weaponName}");
 
@@ -168,7 +169,7 @@ public class Ball : MonoBehaviour
         
         Vector2 inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float distance = Vector2.Distance(transform.position, inputPos);
-        
+
         if (Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart(); //checks if first held down
         if (Input.GetMouseButton(0) && isPlayerDragging) DragChange(inputPos); //checks while holding down
         if (Input.GetMouseButtonUp(0) && isPlayerDragging) DragRelease(inputPos); //checks when released
