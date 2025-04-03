@@ -5,8 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using NUnit.Framework.Constraints;
 using Unity.VisualScripting;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class Ball : MonoBehaviour
@@ -117,7 +120,7 @@ public class Ball : MonoBehaviour
     {
         if (timeUntilMelee <= 0f)
         {
-            if(Input.GetMouseButtonDown(1) && swordSwingCount == 0 && weaponList[0]) //if (InputManager.instance.AttackInput && swordSwingCount == 0 && weaponList[0]) //
+            if(InputManager.instance.AttackInput && weaponList[0]) //&& swordSwingCount == 0 if (Input.GetMouseButtonDown(1) && swordSwingCount == 0 && weaponList[0]) //
             {
                 Debug.Log($"Current weapon name: {weaponName}");
 
@@ -167,12 +170,27 @@ public class Ball : MonoBehaviour
     {
         if(!IsReady() || isGameOver) return;
         
-        Vector2 inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 inputPos;
+        
+        //if (InputManager.instance.IsUsingMouseKeyboard())
+        //{
+        inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //else
+        //{
+        //    inputPos = (Vector2)transform.position + InputManager.instance.DragPosition * 2f;
+        //    Debug.Log($"Current joystick position {inputPos}");
+        //}
+        
         float distance = Vector2.Distance(transform.position, inputPos);
+        
+        if (InputManager.instance.DragStart)
+        {
+            Debug.Log("Click/trigger input received");
+        }
 
-        if (Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart(); //checks if first held down
-        if (Input.GetMouseButton(0) && isPlayerDragging) DragChange(inputPos); //checks while holding down
-        if (Input.GetMouseButtonUp(0) && isPlayerDragging) DragRelease(inputPos); //checks when released
+        if (InputManager.instance.DragStart && distance <= 0.5f)  DragStart();//Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart(); //checks if first held down 
+        if (InputManager.instance.DragStart && isPlayerDragging) DragChange(inputPos); //checks while holding down
+        if (InputManager.instance.DragStart && isPlayerDragging) DragRelease(inputPos); //checks when released
     }
 
     private void DragStart() {
@@ -181,7 +199,7 @@ public class Ball : MonoBehaviour
     }
     private void DragChange(Vector2 pos) {
         Vector2 dir = (Vector2)transform.position - pos;
-        
+
         float maxLineModifier = inBunker ? 4f: 2f; //initializes modifier with a value
 
         lr.SetPosition(0, transform.position);
