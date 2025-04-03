@@ -83,7 +83,6 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (InputManager.instance.AttackInput) { Debug.Log("Attack button pressed!"); }
         PlayerInput();
 
         if(!isPlayerDragging && rb.linearVelocity.magnitude > 0.1f)
@@ -122,7 +121,7 @@ public class Ball : MonoBehaviour
         {
             if(InputManager.instance.AttackInput && weaponList[0]) //&& swordSwingCount == 0 if (Input.GetMouseButtonDown(1) && swordSwingCount == 0 && weaponList[0]) //
             {
-                Debug.Log($"Current weapon name: {weaponName}");
+                //Debug.Log($"Current weapon name: {weaponName}");
 
                 // Get mouse position in world space
                 Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -146,7 +145,7 @@ public class Ball : MonoBehaviour
 
             if(Input.GetMouseButtonDown(1) && swordSwingCount == 0 && weaponList[1])
             {
-                Debug.Log($"Current weapon name: {weaponName}");
+                //Debug.Log($"Current weapon name: {weaponName}");
             }
         } else { timeUntilMelee -= Time.deltaTime; }
     }
@@ -169,28 +168,32 @@ public class Ball : MonoBehaviour
     private void PlayerInput ()
     {
         if(!IsReady() || isGameOver) return;
-        
         Vector2 inputPos;
-        
-        //if (InputManager.instance.IsUsingMouseKeyboard())
-        //{
-        inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //else
-        //{
-        //    inputPos = (Vector2)transform.position + InputManager.instance.DragPosition * 2f;
-        //    Debug.Log($"Current joystick position {inputPos}");
-        //}
+        if (InputManager.instance.IsUsingMouseKeyboard())
+        {
+            inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        } else {
+            inputPos = (Vector2)transform.position + InputManager.instance.DragPosition * 2f;
+            //Debug.Log($"Current joystick position {inputPos}");
+        }
         
         float distance = Vector2.Distance(transform.position, inputPos);
-        
-        if (InputManager.instance.DragStart)
-        {
-            Debug.Log("Click/trigger input received");
-        }
 
-        if (InputManager.instance.DragStart && distance <= 0.5f)  DragStart();//Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart(); //checks if first held down 
-        if (InputManager.instance.DragStart && isPlayerDragging) DragChange(inputPos); //checks while holding down
-        if (InputManager.instance.DragStart && isPlayerDragging) DragRelease(inputPos); //checks when released
+        if (InputManager.instance.DragStart && distance <= 0.5f) // Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart(); //checks if first held down 
+        { 
+            DragStart(); 
+            Debug.Log("Dragging started!");
+        }
+        if (InputManager.instance.DragHolding && isPlayerDragging) 
+        {
+            DragChange(inputPos); //checks while holding down
+            Debug.Log("Dragging...");
+        }
+        if (InputManager.instance.DragReleased && isPlayerDragging) 
+        {
+            DragRelease(inputPos); //checks when released
+            Debug.Log("Dragging released!");
+        }
     }
 
     private void DragStart() {
@@ -211,7 +214,7 @@ public class Ball : MonoBehaviour
         isPlayerDragging = false;
         lr.positionCount = 0;
         swordSwingCount = 0;
-        Debug.Log($"{swordSwingCount}");
+        //Debug.Log($"{swordSwingCount}");
 
         if (distance < 1f) { //cancel drag if not far enough
             return;
@@ -292,13 +295,13 @@ public class Ball : MonoBehaviour
             if (collisionCount < maxBounceCount)
             {
                 collisionCount++;
-                Debug.Log($"Bouncy collision count: {collisionCount}");
+                //Debug.Log($"Bouncy collision count: {collisionCount}");
             }
             else
             {
                 collisionCount = 0;
                 rb.linearVelocity = Vector2.zero;
-                Debug.Log($"Bounce reset");
+                //Debug.Log($"Bounce reset");
             }
         }
     }

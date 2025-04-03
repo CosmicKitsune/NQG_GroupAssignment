@@ -18,7 +18,7 @@
                     "name": "Drag",
                     "type": "Value",
                     "id": "83935949-eb80-4d8a-9433-4f69c8592eb8",
-                    "expectedControlType": "",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -73,7 +73,7 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard",
+                    "groups": ";Mouse",
                     "action": "StartDrag",
                     "isComposite": false,
                     "isPartOfComposite": false
