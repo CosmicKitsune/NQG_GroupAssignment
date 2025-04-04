@@ -31,8 +31,8 @@ public class Ball : MonoBehaviour
     public int maxBounceCount;
     public float meleeSpeed; //weapon stat
     public float damage; //weapon stat
-    
 
+    public AudioManager audioManager;
     private bool isPlayerDragging;
     private bool isGameOver;
     private bool inHole;
@@ -192,6 +192,7 @@ public class Ball : MonoBehaviour
         if (InputManager.instance.DragReleased && isPlayerDragging) 
         {
             DragRelease(inputPos); //checks when released
+            audioManager.PlaySFX(audioManager.hitBall);
             Debug.Log("Dragging released!");
         }
     }
@@ -262,6 +263,7 @@ public class Ball : MonoBehaviour
             Destroy(bfx, 1.5f);
             GameObject fx = Instantiate(waterFx, transform.position, Quaternion.identity);
             Destroy(fx, 2f);
+            audioManager.PlaySFX(audioManager.death);
 
             //resets ball position without resetting the level
             transform.position = originalPos;
