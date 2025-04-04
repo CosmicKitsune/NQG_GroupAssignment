@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class DestroyBricks : MonoBehaviour
 {
     public Tilemap destructableTiles;
+    public AudioManager audioManager;
     [SerializeField] private GameObject breakFx;
 
     private void Start() {
@@ -32,7 +33,7 @@ public class DestroyBricks : MonoBehaviour
                 Vector3Int cellB = new Vector3Int((int)(cellPosition.x - 0.5), (int)(cellPosition.y - 0.5));
                 Vector3Int cellC = new Vector3Int((int)(cellPosition.x + 0.5), (int)(cellPosition.y - 0.5)); 
                 Vector3Int cellD = new Vector3Int((int)(cellPosition.x - 0.5), (int)(cellPosition.y + 0.5));  
-
+                audioManager.PlaySFX(audioManager.hitBlock);
                 //Debug.Log($"Cell Position: {cellPosition} / Cell location: {cellLocation}. Cells A:{cellA} B:{cellB} C:{cellC} D:{cellD} Adjusted Hit point: {hitPosition}");
 
                 if (destructableTiles.HasTile(cellA))

@@ -22,6 +22,7 @@ public class Ball : MonoBehaviour
     [SerializeField] private GameObject ballFx;
     [SerializeField] private Animator anim;
     [SerializeField] private GameObject playerSprite;
+     [SerializeField] private GameObject collisionMarker;
     [SerializeField] private Weapon[] weaponList;
 
     public float maxPower; //max power applied
@@ -43,7 +44,7 @@ public class Ball : MonoBehaviour
    
     public Weapon currentWeapon;
     public Sprite weaponSprite;
-    public string weaponName;
+    private string weaponName;
     int swordSwingCount; //weapon stat
     float timeUntilMelee; //weapon stat
 
@@ -292,6 +293,8 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision){
         //following caps the amount of times you can bounce 
+        Instantiate(collisionMarker, transform.position, transform.rotation);
+        audioManager.PlaySFX(audioManager.hitBall);
         if(collision.gameObject.CompareTag("Bouncy"))
         {   
             if (collisionCount < maxBounceCount)
@@ -305,6 +308,14 @@ public class Ball : MonoBehaviour
                 rb.linearVelocity = Vector2.zero;
                 //Debug.Log($"Bounce reset");
             }
+        }
+        if(collision.gameObject.CompareTag("Wall"))
+        {   
+            audioManager.PlaySFX(audioManager.hitBlock);
+        }
+        if(collision.gameObject.CompareTag("Enemy"))
+        {   
+            audioManager.PlaySFX(audioManager.hitBall);
         }
     }
 
