@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
     public bool AttackInput {get; private set; }
     public bool DragStart {get; private set; }
     public bool DragHolding {get; private set; }
+    public bool DragStickHolding {get; private set; }
     public bool DragReleased {get; private set; }
 
     public enum InputType {MouseKeyboard, Gamepad} //to detect which kind of input is being detected
@@ -38,10 +39,14 @@ public class InputManager : MonoBehaviour
         AttackInput = _attackAction.WasPressedThisFrame();
         DragStart = _dragStartAction.WasPressedThisFrame();
         DragHolding = _dragStartAction.IsInProgress();
+        DragStickHolding = _dragAction.IsInProgress();
         DragReleased = _dragStartAction.WasReleasedThisFrame();
-        if (DragReleased)
+
+        if (DragHolding && DragStickHolding)
         {
-            Debug.Log("Left click released!");
+            DragPosition = _dragAction.ReadValue<Vector2>();
+            // Optional log to debug drag vector
+            Debug.Log($"Controller dragging: {DragPosition}");
         }
     }
     
@@ -56,13 +61,13 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public void OnDrag(InputAction.CallbackContext context)
-    {
-        if (!context.started) return;
+    //public void OnDrag(InputAction.CallbackContext context)
+    //{
+    //    if (!context.started) return;
 
-        DragPosition = context.ReadValue<Vector2>();
-        DetectInputMethod(context);
-    }
+    //    DragPosition = context.ReadValue<Vector2>();
+    //    DetectInputMethod(context);
+    //}
 
     //public void OnDragRelease(InputAction.CallbackContext context)
     //{
@@ -75,11 +80,18 @@ public class InputManager : MonoBehaviour
     {
         if (!context.started) return;
 
-        var rayHit = Physics2D.GetRayIntersection(_mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue())); //to check if we are hitting something
-        if (!rayHit.collider) return;
-        
         DetectInputMethod(context);
-        Debug.Log(rayHit.collider.name);
+
+        if (IsUsingGamepad())
+        {
+            Debug.Log("Gamepad right trigger pressed");
+        } else {
+            var rayHit = Physics2D.GetRayIntersection(_mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue())); //to check if we are hitting something
+            if (!rayHit.collider) return;
+        
+            Debug.Log(rayHit.collider.name);
+        }
+        
     }
 
     public bool IsUsingGamepad()

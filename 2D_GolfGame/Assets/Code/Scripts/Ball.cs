@@ -72,7 +72,7 @@ public class Ball : MonoBehaviour
     {
         weaponName = currentWeapon.name;
         weaponSprite = currentWeapon.icon;
-        Debug.Log($"Is Weapon Putter? {isWeapPutter}; Current weapon name: {weaponName}"); 
+        //Debug.Log($"Is Weapon Putter? {isWeapPutter}; Current weapon name: {weaponName}"); 
     }
 
     private void InitializePlayerData()
@@ -169,13 +169,14 @@ public class Ball : MonoBehaviour
     private void PlayerInput ()
     {
         if(!IsReady() || isGameOver) return;
+
         Vector2 inputPos;
         if (InputManager.instance.IsUsingMouseKeyboard())
         {
             inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         } else {
-            inputPos = (Vector2)transform.position + InputManager.instance.DragPosition * 2f;
-            //Debug.Log($"Current joystick position {inputPos}");
+            inputPos = (Vector2)transform.position + InputManager.instance.DragPosition * 4f;
+            Debug.Log($"Current joystick position {inputPos} at drag position {InputManager.instance.DragPosition * 4f}");
         }
         
         float distance = Vector2.Distance(transform.position, inputPos);
@@ -183,25 +184,26 @@ public class Ball : MonoBehaviour
         if (InputManager.instance.DragStart && distance <= 0.5f) // Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart(); //checks if first held down 
         { 
             DragStart(); 
-            Debug.Log("Dragging started!");
+            Debug.Log($"Dragging started at {inputPos}");
         }
-        if (InputManager.instance.DragHolding && isPlayerDragging) 
+        if (InputManager.instance.DragHolding && isPlayerDragging)
         {
-            DragChange(inputPos); //checks while holding down
-            Debug.Log("Dragging...");
+            DragChange(inputPos);
+            Debug.Log($"Dragging from {inputPos}");
         }
-        if (InputManager.instance.DragReleased && isPlayerDragging) 
+        if (InputManager.instance.DragReleased && isPlayerDragging)
         {
-            DragRelease(inputPos); //checks when released
-            audioManager.PlaySFX(audioManager.hitBall);
-            Debug.Log("Dragging released!");
+            DragRelease(inputPos);
+            Debug.Log($"Dragging released from {inputPos}");
         }
     }
 
-    private void DragStart() {
+    private void DragStart()
+    {
         isPlayerDragging = true;
         lr.positionCount = 2;
     }
+
     private void DragChange(Vector2 pos) {
         Vector2 dir = (Vector2)transform.position - pos;
 
@@ -293,8 +295,9 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision){
         //following caps the amount of times you can bounce 
-        Instantiate(collisionMarker, transform.position, transform.rotation);
-        audioManager.PlaySFX(audioManager.hitBall);
+
+        //Instantiate(collisionMarker, transform.position, transform.rotation);
+        //audioManager.PlaySFX(audioManager.hitBall);
         if(collision.gameObject.CompareTag("Bouncy"))
         {   
             if (collisionCount < maxBounceCount)
