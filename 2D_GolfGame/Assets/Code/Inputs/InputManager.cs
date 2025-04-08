@@ -61,13 +61,20 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public void OnDrag(InputAction.CallbackContext context)
-    {
-        if (!context.started) return;
+    //public void OnDrag(InputAction.CallbackContext context)
+    //{
+    //    if (!context.started) return;
 
-        DragPosition = context.ReadValue<Vector2>();
-        DetectInputMethod(context);
-    }
+    //    DragPosition = context.ReadValue<Vector2>();
+    //    DetectInputMethod(context);
+    //}
+
+    //public void OnDragRelease(InputAction.CallbackContext context)
+    //{
+    //    if (!context.started) return;
+        //DragStart = false;
+    //    DetectInputMethod(context);
+    //}
 
     public void OnClick(InputAction.CallbackContext context)
     {

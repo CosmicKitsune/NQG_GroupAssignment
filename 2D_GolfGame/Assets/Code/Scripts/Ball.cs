@@ -176,7 +176,7 @@ public class Ball : MonoBehaviour
             inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         } else {
             inputPos = (Vector2)transform.position + InputManager.instance.DragPosition * 4f;
-            //Debug.Log($"Current joystick position {inputPos} at drag position {InputManager.instance.DragPosition * 4f}");
+            Debug.Log($"Current joystick position {inputPos} at drag position {InputManager.instance.DragPosition * 4f}");
         }
         
         float distance = Vector2.Distance(transform.position, inputPos);
@@ -184,7 +184,7 @@ public class Ball : MonoBehaviour
         if (InputManager.instance.DragStart && distance <= 0.5f) // Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart(); //checks if first held down 
         { 
             DragStart(); 
-            //Debug.Log($"Dragging started at {inputPos}");
+            Debug.Log($"Dragging started at {inputPos}");
         }
         if (InputManager.instance.DragHolding && isPlayerDragging)
         {
@@ -194,7 +194,7 @@ public class Ball : MonoBehaviour
         if (InputManager.instance.DragReleased && isPlayerDragging)
         {
             DragRelease(inputPos);
-            //Debug.Log($"Dragging released from {inputPos}");
+            Debug.Log($"Dragging released from {inputPos}");
         }
     }
 

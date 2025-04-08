@@ -15,6 +15,8 @@ public class SentryEnemy : MonoBehaviour
     [SerializeField] private float damage = 1f; // bullet damage
     [SerializeField]  private float bulletTimer; //how many bullets can spawn at once
 
+    public AudioManager audioManager;
+
     private void FixedUpdate()
     {
         if (bulletTimer == 0)
@@ -25,6 +27,7 @@ public class SentryEnemy : MonoBehaviour
 
     private void FireBullet()
     {
+        audioManager.PlaySFX(audioManager.bulletFire);
         bulletTimer = 50f;
         var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
         bullet.GetComponent<Rigidbody2D>().linearVelocity = transform.up * bulletSpeed;
